@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.parse.FindCallback;
+import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseQuery;
@@ -38,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private Button btnSubmit;
     private File photoFile;
     public String photoFileName = "photo.jpg";
+    private Button btnLogout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +50,8 @@ public class MainActivity extends AppCompatActivity {
         btnCaptureImage = findViewById(R.id.btnPicture);
         ivPostImage = findViewById(R.id.ivImage);
         btnSubmit = findViewById(R.id.btnSubmit);
+        btnLogout = findViewById(R.id.btnLogout);
+
 
         btnCaptureImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,6 +75,18 @@ public class MainActivity extends AppCompatActivity {
                 }
                 ParseUser currentUser = ParseUser.getCurrentUser();
                 savePost(description, currentUser, photoFile);
+            }
+        });
+
+        btnLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ParseUser.logOut();
+                ParseUser currentUser = ParseUser.getCurrentUser();
+                Toast.makeText(MainActivity.this, "You're Logged Out...", Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(MainActivity.this, LoginActivity.class);
+                startActivity(i);
+                finish();
             }
         });
 
@@ -143,6 +159,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.i(TAG, "Post save success");
                 etDescription.setText("");
                 ivPostImage.setImageResource(0);
+                Toast.makeText(MainActivity.this, "Image Uploaded", Toast.LENGTH_SHORT).show();
             }
         });
     }
